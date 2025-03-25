@@ -1,39 +1,67 @@
 version: '3.8'
 
 services:
-  streamlit:
-    build: ./app
+  nginx:
+    image: nginx:latest
     ports:
-      - "8501:8501"
-    environment:
-      - MYSQL_HOST=db
-      - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-      - MYSQL_DATABASE=${MYSQL_DATABASE}
-    depends_on:
-      - db
+      - "80:80"
     volumes:
-      - ./app:/app
+      - ./src:/var/www/html
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - php
     networks:
-      - health_network
+      - app-network
+
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile.php
+    volumes:
+      - ./src:/var/www/html
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - app-network
 
   db:
     image: mysql:8.0
+    restart: always
     environment:
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - MYSQL_DATABASE=${MYSQL_DATABASE}
-      - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: aa123456
+      MYSQL_DATABASE: health_db
+      MYSQL_USER: healthuser
+      MYSQL_PASSWORD: aa123456
     volumes:
-      - ./mysql/data:/var/lib/mysql  # 数据持久化存储
-      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql  # 初始化脚本
+      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - mysql_data:/var/lib/mysql
     ports:
       - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "--password=aa123456"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
     networks:
-      - health_network
-    command: --default-authentication-plugin=mysql_native_password
-    restart: unless-stopped
+      - app-network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: aa123456
+    depends_on:
+      - db
+    networks:
+      - app-network
 
 networks:
-  health_network:
+  app-network:
     driver: bridge
+
+volumes:
+  mysql_data:

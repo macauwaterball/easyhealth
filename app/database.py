@@ -1,45 +1,29 @@
 import mysql.connector
-from mysql.connector import Error
-from config import DB_CONFIG
-import pandas as pd
+import os
 
 class Database:
     def __init__(self):
-        try:
-            self.connection = mysql.connector.connect(**DB_CONFIG)
-            self.cursor = self.connection.cursor(dictionary=True)
-        except Error as e:
-            print(f"数据库连接错误: {e}")
-            raise
-
-    def execute_query(self, query, params=None):
-        try:
-            self.cursor.execute(query, params or ())
-            self.connection.commit()
-            return True
-        except Error as e:
-            print(f"查询执行错误: {e}")
-            return False
-
-    def fetch_all(self, query, params=None):
-        try:
-            self.cursor.execute(query, params or ())
-            return self.cursor.fetchall()
-        except Error as e:
-            print(f"数据获取错误: {e}")
-            return []
+        self.connection = mysql.connector.connect(
+            host=os.getenv('MYSQL_HOST', 'db'),
+            database=os.getenv('MYSQL_DATABASE', 'health_db'),
+            user=os.getenv('MYSQL_USER', 'healthuser'),
+            password=os.getenv('MYSQL_PASSWORD', 'aa123456')
+        )
+        self.cursor = self.connection.cursor(dictionary=True)
 
     def fetch_one(self, query, params=None):
-        try:
-            self.cursor.execute(query, params or ())
-            return self.cursor.fetchone()
-        except Error as e:
-            print(f"数据获取错误: {e}")
-            return None
+        self.cursor.execute(query, params or ())
+        return self.cursor.fetchone()
+
+    def fetch_all(self, query, params=None):
+        self.cursor.execute(query, params or ())
+        return self.cursor.fetchall()
+
+    def execute_query(self, query, params=None):
+        self.cursor.execute(query, params or ())
+        self.connection.commit()
+        return True
 
     def close(self):
-        try:
-            self.cursor.close()
-            self.connection.close()
-        except Error as e:
-            print(f"关闭连接错误: {e}")
+        self.cursor.close()
+        self.connection.close()

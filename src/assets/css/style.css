@@ -1,0 +1,21 @@
+.user-info {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.form-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.error-message {
+    color: #dc3545;
+    margin-top: 5px;
+}
+
+.success-message {
+    color: #198754;
+    margin-top: 5px;
+}

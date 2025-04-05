@@ -1,10 +1,17 @@
 <?php
 class Database {
-    private $host = "db";
-    private $db_name = "health_db";
-    private $username = "healthuser";
-    private $password = "aa123456";
+    private $host;
+    private $db_name;
+    private $username;
+    private $password;
     private $conn;
+
+    public function __construct() {
+        $this->host = "db";
+        $this->db_name = "health_db";
+        $this->username = "healthuser";
+        $this->password = "aa123456";
+    }
 
     public function getConnection() {
         $this->conn = null;
@@ -13,12 +20,13 @@ class Database {
             $this->conn = new PDO(
                 "mysql:host=" . $this->host . ";dbname=" . $this->db_name,
                 $this->username,
-                $this->password
+                $this->password,
+                [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
             );
             $this->conn->exec("set names utf8mb4");
-            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch(PDOException $e) {
-            echo "连接错误: " . $e->getMessage();
+            error_log("数据库连接错误: " . $e->getMessage());
+            throw new Exception("数据库连接失败");
         }
 
         return $this->conn;

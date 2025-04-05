@@ -1,21 +1,15 @@
 <?php
-require_once 'includes/header.php';
-
+// 确保在任何输出之前进行重定向
 if (!isset($_SESSION['user_id'])) {
-    header('Location: /modules/auth/login.php');
+    header('Location: /auth/login.php');
     exit;
 }
+require_once 'includes/header.php';
 ?>
 
-<div class="row">
-    <div class="col-md-12">
-        <h2>欢迎使用社区健康管理系统</h2>
-        <?php if(isset($_SESSION['current_user'])): ?>
-        <div class="alert alert-info">
-            当前用户：<?php echo htmlspecialchars($_SESSION['current_user']['name']); ?>
-        </div>
-        <?php endif; ?>
-    </div>
+<div class="container">
+    <h2>欢迎使用社区健康管理系统</h2>
+    <!-- 其他内容 -->
 </div>
 
 <?php require_once 'includes/footer.php'; ?>

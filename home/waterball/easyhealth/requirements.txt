@@ -1,5 +1,0 @@
-PHP >= 8.2
-MySQL >= 8.0
-Apache >= 2.4
-PDO PHP Extension
-PDO_MySQL PHP Extension

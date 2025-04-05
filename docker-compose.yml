@@ -1,17 +1,15 @@
-version: '3.8'
-
+version: '3'
 services:
-  nginx:
+  web:
     image: nginx:latest
     ports:
-      - "80:80"
+      - "8080:80"
     volumes:
       - ./src:/var/www/html
       - ./nginx/conf.d:/etc/nginx/conf.d
     depends_on:
       - php
-    networks:
-      - app-network
+      - db
 
   php:
     build:
@@ -20,48 +18,17 @@ services:
     volumes:
       - ./src:/var/www/html
     depends_on:
-      db:
-        condition: service_healthy
-    networks:
-      - app-network
+      - db
 
   db:
     image: mysql:8.0
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: aa123456
-      MYSQL_DATABASE: health_db
-      MYSQL_USER: healthuser
-      MYSQL_PASSWORD: aa123456
-    volumes:
-      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
-      - mysql_data:/var/lib/mysql
     ports:
       - "3306:3306"
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "--password=aa123456"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
-    networks:
-      - app-network
-
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    ports:
-      - "8080:80"
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
     environment:
-      PMA_HOST: db
-      MYSQL_ROOT_PASSWORD: aa123456
-    depends_on:
-      - db
-    networks:
-      - app-network
-
-networks:
-  app-network:
-    driver: bridge
-
-volumes:
-  mysql_data:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}

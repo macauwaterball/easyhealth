@@ -1,4 +1,5 @@
 <?php
+// 确保这里没有空行或其他输出
 session_start();
 ?>
 <!DOCTYPE html>
@@ -11,22 +12,16 @@ session_start();
     <link href="/assets/css/style.css" rel="stylesheet">
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
     <div class="container">
-        <a class="navbar-brand" href="/">社区健康管理系统</a>
-        <?php if(isset($_SESSION['user_id'])): ?>
-        <div class="collapse navbar-collapse">
-            <ul class="navbar-nav me-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="/modules/users/search.php">用户搜索</a>
-                </li>
-            </ul>
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="/modules/auth/logout.php">退出</a>
-                </li>
-            </ul>
-        </div>
+        <a class="navbar-brand" href="/index.php">社区健康管理系统</a>
+        <?php if (isset($_SESSION['username'])): ?>
+            <div class="d-flex">
+                <span class="navbar-text me-3">
+                    欢迎，<?php echo htmlspecialchars($_SESSION['username']); ?>
+                </span>
+                <a href="/auth/logout.php" class="btn btn-outline-light btn-sm">登出</a>
+            </div>
         <?php endif; ?>
     </div>
 </nav>

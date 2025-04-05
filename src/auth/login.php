@@ -2,15 +2,10 @@
 session_start();
 require_once '../config/database.php';
 
-if (isset($_SESSION['user_id'])) {
-    header('Location: /index.php');
-    exit;
-}
-
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $username = trim($_POST['username'] ?? '');
+    $username = $_POST['username'] ?? '';
     $password = $_POST['password'] ?? '';
     
     if (!empty($username) && !empty($password)) {
@@ -18,24 +13,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $db = $database->getConnection();
         
         try {
-            $stmt = $db->prepare("SELECT * FROM users WHERE username = ?");
-            $stmt->execute([$username]);
+            $stmt = $db->prepare("SELECT * FROM users WHERE username = ? AND password = ?");
+            $stmt->execute([$username, $password]);
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
             
-            if ($user && password_verify($password, $user['password'])) {
-                session_regenerate_id(true);
+            if ($user) {
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['username'] = $user['username'];
-                $_SESSION['last_activity'] = time();
-                
-                header('Location: /index.php');
+                // 修改重定向路径
+                header('Location: ../index.php');
                 exit;
             } else {
                 $error = "用户名或密码错误";
             }
         } catch (PDOException $e) {
-            error_log("登录错误: " . $e->getMessage());
-            $error = "登录失败，请稍后重试";
+            $error = "登录失败：" . $e->getMessage();
         }
     } else {
         $error = "请填写用户名和密码";

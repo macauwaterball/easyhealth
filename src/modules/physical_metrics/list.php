@@ -1,5 +1,6 @@
 <?php
 require_once '../../includes/auth_check.php';
+require_once '../../includes/header.php';
 require_once '../../config/database.php';
 
 $user_id = $_GET['user_id'] ?? 0;
@@ -16,26 +17,22 @@ if ($user_id) {
 }
 
 if (!$user) {
-    // 使用JavaScript重定向而不是header()
-    echo "<script>window.location.href = '../physical/list.php';</script>";
+    header("Location: ../users/search.php");
     exit;
 }
 
-// 获取运动记录
+// 获取体格指标记录
 $stmt = $db->prepare("
-    SELECT * FROM exercise_records 
+    SELECT * FROM physical_metrics 
     WHERE user_id = ? 
     ORDER BY date DESC
 ");
 $stmt->execute([$user_id]);
 $records = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-// 现在可以安全地包含header
-require_once '../../includes/header.php';
 ?>
 
 <div class="container">
-    <h2>运动记录</h2>
+    <h2>体格指标记录</h2>
     <h4>用户：<?php echo htmlspecialchars($user['name']); ?></h4>
     
     <div class="mb-3">
@@ -44,16 +41,17 @@ require_once '../../includes/header.php';
     </div>
     
     <?php if (empty($records)): ?>
-        <div class="alert alert-info">暂无运动记录</div>
+        <div class="alert alert-info">暂无体格指标记录</div>
     <?php else: ?>
         <div class="table-responsive">
             <table class="table table-striped table-hover">
                 <thead>
                     <tr>
                         <th>日期</th>
-                        <th>运动类型</th>
-                        <th>时长(分钟)</th>
-                        <th>强度</th>
+                        <th>身高 (cm)</th>
+                        <th>体重 (kg)</th>
+                        <th>BMI</th>
+                        <th>腰围 (cm)</th>
                         <th>操作</th>
                     </tr>
                 </thead>
@@ -61,28 +59,29 @@ require_once '../../includes/header.php';
                     <?php foreach ($records as $record): ?>
                         <tr>
                             <td><?php echo htmlspecialchars($record['date']); ?></td>
-                            <td><?php echo htmlspecialchars($record['exercise_type']); ?></td>
-                            <td><?php echo htmlspecialchars($record['duration']); ?></td>
+                            <td><?php echo $record['height'] ? htmlspecialchars($record['height']) : '-'; ?></td>
+                            <td><?php echo $record['weight'] ? htmlspecialchars($record['weight']) : '-'; ?></td>
                             <td>
                                 <?php 
-                                $intensity = htmlspecialchars($record['intensity']);
-                                $badge_class = 'bg-secondary';
-                                
-                                if ($intensity == '高强度') {
-                                    $badge_class = 'bg-danger';
-                                } elseif ($intensity == '中等强度') {
-                                    $badge_class = 'bg-warning';
-                                } elseif ($intensity == '低强度') {
-                                    $badge_class = 'bg-info';
-                                } elseif ($intensity == '不活跃') {
-                                    $badge_class = 'bg-secondary';
+                                if ($record['bmi']) {
+                                    echo htmlspecialchars($record['bmi']);
+                                    // 显示BMI评估
+                                    if ($record['bmi'] < 18.5) {
+                                        echo ' <span class="badge bg-info">偏瘦</span>';
+                                    } elseif ($record['bmi'] < 24) {
+                                        echo ' <span class="badge bg-success">正常</span>';
+                                    } elseif ($record['bmi'] < 28) {
+                                        echo ' <span class="badge bg-warning">超重</span>';
+                                    } else {
+                                        echo ' <span class="badge bg-danger">肥胖</span>';
+                                    }
+                                } else {
+                                    echo '-';
                                 }
-                                
-                                echo "<span class='badge {$badge_class}'>{$intensity}</span>";
                                 ?>
                             </td>
+                            <td><?php echo $record['waist'] ? htmlspecialchars($record['waist']) : '-'; ?></td>
                             <td>
-                                <a href="view.php?id=<?php echo $record['id']; ?>" class="btn btn-sm btn-info">详情</a>
                                 <a href="edit.php?id=<?php echo $record['id']; ?>" class="btn btn-sm btn-primary">编辑</a>
                                 <a href="delete.php?id=<?php echo $record['id']; ?>" class="btn btn-sm btn-danger" 
                                    onclick="return confirm('确定要删除这条记录吗？')">删除</a>

@@ -27,10 +27,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             header('Location: /');
             exit;
         } else {
-            $error = '用户名或密码错误';
+            $error = '用戶名或密碼錯誤';
         }
     } else {
-        $error = '请填写所有字段';
+        $error = '請填寫所有內容';
     }
 }
 ?>
@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <div class="col-md-6">
         <div class="card">
             <div class="card-header">
-                <h3 class="text-center">登录</h3>
+                <h3 class="text-center">登入</h3>
             </div>
             <div class="card-body">
                 <?php if ($error): ?>
@@ -52,11 +52,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <input type="text" class="form-control" id="username" name="username" required>
                     </div>
                     <div class="mb-3">
-                        <label for="password" class="form-label">密码</label>
+                        <label for="password" class="form-label">密碼</label>
                         <input type="password" class="form-control" id="password" name="password" required>
                     </div>
                     <div class="d-grid">
-                        <button type="submit" class="btn btn-primary">登录</button>
+                        <button type="submit" class="btn btn-primary">登入</button>
                     </div>
                 </form>
             </div>

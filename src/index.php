@@ -49,6 +49,13 @@ require_once 'includes/header.php';
         
         <!-- 其他功能菜單已隱藏，以後再開發 -->
     </div>
-</div>
 
-<?php require_once 'includes/footer.php'; ?>
+    <footer class="mt-5 py-3 bg-light">
+        <div class="container text-center">
+            <p class="mb-0 text-muted">© 2023 社區健康管理系統 | 版權所有</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

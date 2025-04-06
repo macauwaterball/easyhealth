@@ -8,7 +8,7 @@ if (session_status() === PHP_SESSION_NONE) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>社區健康管理系統</title>
+    <title>恩臨教會社區健康管理系統</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
     <link href="/assets/css/style.css" rel="stylesheet">
@@ -17,7 +17,7 @@ if (session_status() === PHP_SESSION_NONE) {
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
     <div class="container">
         <a class="navbar-brand" href="/index.php">
-            <i class="bi bi-heart-pulse-fill me-2"></i>社區健康管理系統
+            <i class="bi bi-heart-pulse-fill me-2"></i>恩臨教會社區健康管理系統
         </a>
         <div class="d-flex">
             <span class="navbar-text me-3">

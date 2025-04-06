@@ -85,6 +85,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['keyword'])) {
             </table>
         </div>
     <?php elseif (isset($_GET['keyword'])): ?>
-        <div class="alert alert-info">未找到匹配的用户</div>
+        <div class="alert alert-info">未找到匹配的用户 </div>
     <?php endif; ?>
 </div>

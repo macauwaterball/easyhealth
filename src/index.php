@@ -9,7 +9,7 @@ require_once 'includes/header.php';
 
 <div class="welcome-section">
     <div class="container">
-        <h1 class="display-5 fw-bold">歡迎使用恩臨教會社區健康管理系統</h1>
+        <h1 class="display-5 fw-bold">歡迎使用澳門恩臨教會社區健康管理系統</h1>
         <p class="lead">這裡提供全面的健康管理功能，幫助您更好地跟蹤和管理社區居民的健康狀況。</p>
     </div>
 </div>

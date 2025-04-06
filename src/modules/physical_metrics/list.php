@@ -135,33 +135,11 @@ require_once '../../includes/header.php';
                                 ?>
                             </td>
                             <td><?php echo isset($record['waist']) ? htmlspecialchars(number_format($record['waist'], 1)) : '-'; ?></td>
+                            <td><?php echo isset($record['blood_sugar']) ? htmlspecialchars(number_format($record['blood_sugar'], 1)) : '-'; ?></td>
                             <td>
-                                <?php 
-                                if (isset($record['blood_sugar']) && $record['blood_sugar']) {
-                                    $sugar = $record['blood_sugar'];
-                                    $sugar_class = 'success';
-                                    $sugar_text = '正常';
-                                    
-                                    if ($sugar > 5.8) {
-                                        $sugar_class = 'warning';
-                                        $sugar_text = '需要注意';
-                                    }
-                                    
-                                    echo htmlspecialchars(number_format($sugar, 1));
-                                    echo ' <span class="badge bg-'.$sugar_class.'">'.$sugar_text.'</span>';
-                                } else {
-                                    echo '-';
-                                }
-                                ?>
-                            </td>
-                            <td>
-                                <a href="edit.php?id=<?php echo $record['id']; ?>" class="btn btn-sm btn-outline-primary">
-                                    <i class="bi bi-pencil-square"></i>
-                                </a>
-                                <a href="delete.php?id=<?php echo $record['id']; ?>" class="btn btn-sm btn-outline-danger" 
-                                   onclick="return confirm('確定要刪除這條記錄嗎？');">
-                                    <i class="bi bi-trash"></i>
-                                </a>
+                                <a href="edit.php?id=<?php echo $record['id']; ?>" class="btn btn-sm btn-primary">編輯</a>
+                                <a href="delete.php?id=<?php echo $record['id']; ?>" class="btn btn-sm btn-danger" 
+                                   onclick="return confirm('確定要刪除這條記錄嗎？')">刪除</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>

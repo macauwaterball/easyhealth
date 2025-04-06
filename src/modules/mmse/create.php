@@ -44,20 +44,22 @@ try {
         $language = $naming + $repetition + $comprehension + $reading + $writing + $drawing;
         $total_score = $orientation + $registration + $attention + $recall + $language;
         
-        // 插入數據庫
+        // 修改SQL語句，使用正確的欄位名稱和參數數量
+        // 修改SQL语句，使用正确的字段名
         $stmt = $db->prepare("
             INSERT INTO mmse_records (
-                user_id, test_date, orientation_score, memory_score, attention_score, 
-                language_score, total_score, notes
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                user_id, test_date, orientation_score, registration, attention, recall,
+                language, total_score, notes
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         ");
         
         $result = $stmt->execute([
             $userId,
             $_POST['test_date'],
             $orientation,
-            $registration + $recall, // memory_score = registration + recall
+            $registration,
             $attention,
+            $recall,
             $language,
             $total_score,
             $_POST['notes'] ?? ''
@@ -652,6 +654,3 @@ document.addEventListener('DOMContentLoaded', function() {
     // 初始化分數顯示
     updateScore();
 });
-</script>
-
-<?php require_once '../../includes/footer.php'; ?>

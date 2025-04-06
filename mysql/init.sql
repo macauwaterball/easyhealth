@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS demographics (
     name VARCHAR(100) NOT NULL,
     phone VARCHAR(20),
     birth_date DATE,
-    gender VARCHAR(10) NOT NULL,  -- 修改这里，从VARCHAR(2)改为VARCHAR(10)
+    gender VARCHAR(10) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS physical_metrics (
     height DECIMAL(5,2),
     weight DECIMAL(5,2),
     bmi DECIMAL(4,2),
-    waist DECIMAL(5,2),  -- 添加腰围字段
+    waist DECIMAL(5,2),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES demographics(id)
 );
@@ -65,28 +65,7 @@ CREATE TABLE IF NOT EXISTS medication_records (
     FOREIGN KEY (user_id) REFERENCES demographics(id)
 );
 
--- MMSE认知测试记录表
-CREATE TABLE IF NOT EXISTS mmse_records (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    test_date DATE NOT NULL,
-    orientation_score INT,
-    memory_score INT,
-    attention_score INT,
-    language_score INT,
-    total_score INT,
-    notes TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES demographics(id)
-);
-
 -- 运动记录表
--- First verify if table exists
-SELECT COUNT(*) FROM information_schema.tables 
-WHERE table_schema = 'health_db' 
-AND table_name = 'exercise_records';
-
--- Create exercise_records table if not exists
 CREATE TABLE IF NOT EXISTS exercise_records (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
@@ -97,6 +76,22 @@ CREATE TABLE IF NOT EXISTS exercise_records (
     notes TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES demographics(id)
+);
+
+-- MMSE認知測試記錄表
+CREATE TABLE IF NOT EXISTS mmse_records (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    test_date DATE NOT NULL,
+    orientation_score INT NOT NULL DEFAULT 0,
+    registration INT NOT NULL DEFAULT 0,
+    attention INT NOT NULL DEFAULT 0,
+    recall INT NOT NULL DEFAULT 0,
+    language INT NOT NULL DEFAULT 0,
+    total_score INT NOT NULL DEFAULT 0,
+    notes TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES demographics(id) ON DELETE CASCADE
 );
 
 -- 创建数据库用户
@@ -114,4 +109,3 @@ SHOW DATABASES;
 -- Verify table creation
 USE health_db;
 SHOW TABLES;
-

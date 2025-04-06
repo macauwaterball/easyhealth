@@ -4,23 +4,28 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 ?>
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>社区健康管理系统</title>
+    <title>恩臨教會社區健康管理系統</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
     <link href="/assets/css/style.css" rel="stylesheet">
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
     <div class="container">
-        <a class="navbar-brand" href="/index.php">社区健康管理系统</a>
+        <a class="navbar-brand" href="/index.php">
+            <i class="bi bi-heart-pulse-fill me-2"></i>恩臨教會社區健康管理系統
+        </a>
         <div class="d-flex">
             <span class="navbar-text me-3">
-                欢迎，<?php echo htmlspecialchars($_SESSION['username'] ?? ''); ?>
+                <i class="bi bi-person-circle me-1"></i>歡迎，<?php echo htmlspecialchars($_SESSION['username'] ?? ''); ?>
             </span>
-            <a href="/auth/logout.php" class="btn btn-outline-light btn-sm">退出登录</a>
+            <a href="/auth/logout.php" class="btn btn-outline-light btn-sm">
+                <i class="bi bi-box-arrow-right me-1"></i>退出登錄
+            </a>
         </div>
     </div>
 </nav>

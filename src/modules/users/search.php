@@ -88,3 +88,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['keyword'])) {
         <div class="alert alert-info">未找到匹配的用户</div>
     <?php endif; ?>
 </div>
+<?php require_once '../../includes/footer.php'; ?>

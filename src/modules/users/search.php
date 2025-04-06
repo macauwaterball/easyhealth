@@ -23,14 +23,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['keyword'])) {
             $stmt->execute([$searchTerm, $searchTerm]);
             $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
-            $error = "查询失败：" . $e->getMessage();
+            $error = "查詢失敗：" . $e->getMessage();
         }
     }
 }
 ?>
 
 <div class="container">
-    <h2>用户查询</h2>
+    <h2>用户查詢</h2>
     <div class="mb-4">
         <a href="create.php" class="btn btn-primary">新建用户</a>
     </div>
@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['keyword'])) {
             <form method="GET" class="row g-3">
                 <div class="col-md-10">
                     <input type="text" class="form-control" name="keyword" 
-                           placeholder="输入姓名或电话号码搜索" 
+                           placeholder="輸入姓名或電話號碼搜索" 
                            value="<?php echo htmlspecialchars($_GET['keyword'] ?? ''); ?>">
                 </div>
                 <div class="col-md-2">
@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['keyword'])) {
                 <thead>
                     <tr>
                         <th>姓名</th>
-                        <th>电话</th>
+                        <th>電話</th>
                         <th>出生日期</th>
                         <th>性别</th>
                         <th>操作</th>

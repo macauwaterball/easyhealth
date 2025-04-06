@@ -28,6 +28,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $height = trim($_POST['height'] ?? '');
     $weight = trim($_POST['weight'] ?? '');
     $waist = trim($_POST['waist'] ?? '');
+    // 删除 hip 变量
+    $blood_sugar = trim($_POST['blood_sugar'] ?? '');
     
     // 计算BMI
     $bmi = null;
@@ -38,9 +40,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
     
     try {
+        // 检查表是否存在blood_sugar字段，如果不存在则添加
+        try {
+            $stmt = $db->prepare("SELECT blood_sugar FROM physical_metrics LIMIT 1");
+            $stmt->execute();
+        } catch (PDOException $e) {
+            // 字段不存在，添加这些字段
+            if (strpos($e->getMessage(), "Unknown column") !== false) {
+                // 删除添加 hip 字段的代码
+                $db->exec("ALTER TABLE physical_metrics ADD COLUMN blood_sugar DECIMAL(5,1) NULL AFTER waist");
+            }
+        }
+        
         $stmt = $db->prepare("
-            INSERT INTO physical_metrics (user_id, date, height, weight, bmi, waist) 
-            VALUES (?, ?, ?, ?, ?, ?)
+            INSERT INTO physical_metrics (user_id, date, height, weight, bmi, waist, blood_sugar) 
+            VALUES (?, ?, ?, ?, ?, ?, ?)
         ");
         
         $result = $stmt->execute([
@@ -49,7 +63,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $height ?: null, 
             $weight ?: null, 
             $bmi, 
-            $waist ?: null
+            $waist ?: null,
+            $blood_sugar ?: null
         ]);
         
         if ($result) {
@@ -83,22 +98,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                        value="<?php echo date('Y-m-d'); ?>" required>
             </div>
             
-            <div class="mb-3">
-                <label for="height" class="form-label">身高 (cm)</label>
-                <input type="number" step="0.1" class="form-control" id="height" name="height" 
-                       placeholder="例如：170.5">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="height" class="form-label">身高 (cm)</label>
+                    <input type="number" step="0.1" class="form-control" id="height" name="height" 
+                           placeholder="例如：170.5">
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                    <label for="weight" class="form-label">体重 (kg)</label>
+                    <input type="number" step="0.1" class="form-control" id="weight" name="weight" 
+                           placeholder="例如：65.5">
+                </div>
             </div>
             
-            <div class="mb-3">
-                <label for="weight" class="form-label">体重 (kg)</label>
-                <input type="number" step="0.1" class="form-control" id="weight" name="weight" 
-                       placeholder="例如：65.5">
-            </div>
-            
-            <div class="mb-3">
-                <label for="waist" class="form-label">腰围 (cm)</label>
-                <input type="number" step="0.1" class="form-control" id="waist" name="waist" 
-                       placeholder="例如：80.5">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="waist" class="form-label">腰围 (cm)</label>
+                    <input type="number" step="0.1" class="form-control" id="waist" name="waist" 
+                           placeholder="例如：80.5">
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                    <label for="blood_sugar" class="form-label">血糖 (mmol/L)</label>
+                    <input type="number" step="0.1" class="form-control" id="blood_sugar" name="blood_sugar" 
+                           placeholder="例如：5.5">
+                </div>
             </div>
             
             <div class="d-grid gap-2">

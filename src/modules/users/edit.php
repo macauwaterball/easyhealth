@@ -16,7 +16,7 @@ if (isset($_GET['id'])) {
         $stmt->execute([$_GET['id']]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
     } catch (PDOException $e) {
-        $error = "获取用户信息失败：" . $e->getMessage();
+        $error = "獲取用戶信息失敗：" . $e->getMessage();
     }
 }
 
@@ -38,10 +38,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmt->execute([$id]);
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
-            $error = "更新失败：" . $e->getMessage();
+            $error = "更新失敗：" . $e->getMessage();
         }
     } else {
-        $error = "请填写所有必填字段";
+        $error = "請填寫所有必填內容";
     }
 }
 
@@ -74,7 +74,7 @@ if (!$user) {
                 </div>
                 
                 <div class="mb-3">
-                    <label for="phone" class="form-label">电话 *</label>
+                    <label for="phone" class="form-label">電話 *</label>
                     <input type="tel" class="form-control" id="phone" name="phone" 
                            value="<?php echo htmlspecialchars($user['phone']); ?>" required>
                 </div>
@@ -88,7 +88,7 @@ if (!$user) {
                 <div class="mb-3">
                     <label for="gender" class="form-label">性别 *</label>
                     <select class="form-select" id="gender" name="gender" required>
-                        <option value="">请选择</option>
+                        <option value="">請選擇</option>
                         <option value="男" <?php echo $user['gender'] == '男' ? 'selected' : ''; ?>>男</option>
                         <option value="女" <?php echo $user['gender'] == '女' ? 'selected' : ''; ?>>女</option>
                     </select>
